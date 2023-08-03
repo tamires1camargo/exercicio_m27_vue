@@ -1,61 +1,68 @@
 <script setup>
 
+import { ref, watch } from 'vue';
 
-new Vue({
-  el: '...',
-  data: {
-    selected: '',
-    options: [
-      { text: 'Selecione', value: '' },
-      { text: 'Adição', value: '+' },
-      { text: 'Subtração', value: '-' },
-      { text: 'Divisão', value: '/' },
-      { text: 'Multiplicação', value: '*' }
-    ]
+const selected = ref('');
+const valor1 = ref(0);
+const valor2 = ref(0);
+const resultado = ref(0);
+
+function Soma(a, b) {
+  return a + b;
+}
+
+function Subtracao(a, b) {
+  return a - b;
+}
+
+function Divisao(a, b) {
+  return a / b;
+}
+
+function Multiplicacao(a, b) {
+  return a * b;
+}
+
+watch([valor1, valor2, selected], () => {
+  calcular();
+});
+
+
+function calcular() {
+  if (selected.value === '+') {
+    resultado.value = Soma(valor1.value, valor2.value);
+  } else if (selected.value === '-') {
+    resultado.value = Subtracao(valor1.value, valor2.value);
+  } else if (selected.value === '/') {
+    resultado.value = Divisao(valor1.value, valor2.value);
+  } else if (selected.value === '*') {
+    resultado.value = Multiplicacao(valor1.value, valor2.value);
   }
-})
-
-
-
-function Calculo(valor1, valor2, operacao) {
-  var resultado = 0;
-
-  if (operacao == "+")
-      resultado = Soma(valor1, valor2);
-
-  if (operacao == "-")
-      resultado = subtração(valor1, valor2);
-
-  if (operacao == "/")
-  resultado = divisão(valor1, valor2);
-
-  if (operacao == "*")
-  resultado = multiplicação(valor1, valor2);
-  
-      return resultado;
 }
 </script>
-
 
 <template>
   <div id="app" class="p-4">
     <h1>Primeira Calculadora Vue</h1>
-    <h4>Insira os números que deseja calcular e selecione o operação</h4>
+    <h4>Insira os números que deseja calcular e selecione a operação</h4>
     <br>
-    <form id="app" @submit="checkForm">
+    <form id="app">
       <div class="row container">
-      <input id="valor1" name="valor1" type="number" placeholder="Digite o primeiro valor" class="form-control">
-      <input id="valor2" name="valor2" type="number" placeholder="Digite o segundo valor" class="form-control">
-      <select v-model="selected" class="form-control">
-        <option v-for="option in options" v-bind:value="option.value">
-        {{ option.text }}
-        </option>
-      </select>
-      <br>
-      <span>Selecionado: {{ selected }}</span>
-      <br>
-      <output id="resultado" name="resultado">Resultado {{ Calculo() }}</output>
-    </div>
+        <input v-model="valor1" type="number" placeholder="Digite o primeiro valor" class="form-control">
+        <input v-model="valor2" type="number" placeholder="Digite o segundo valor" class="form-control">
+          <div class="selecao">
+            <select v-model="selected" class="form-control">
+            <option value="+" selected>+</option>
+            <option value="-">-</option>
+            <option value="*">*</option>
+            <option value="/">/</option>
+          </select>
+          </div>
+        <br>
+        <span>Selecionado: {{ selected }}</span>
+        <br>
+        <output id="resultado" name="resultado">Resultado {{ resultado }}</output>
+      </div>
     </form>
   </div>
 </template>
@@ -75,6 +82,12 @@ function Calculo(valor1, valor2, operacao) {
 input {
   margin-bottom: 10px;
   background-color: #f5e0b4;
+}
+
+option {
+  text-align: center;
+  font-size: 22px;
+  font-weight: bold;
 }
 
 output {
